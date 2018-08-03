@@ -15,70 +15,28 @@ import java.util.Random;
  */
 public class RPSPanel extends javax.swing.JPanel {
 
-    HashMap<Integer, String> options = new HashMap<>();
-    String computerChoice;
-    String userChoice;
-    String finalState;
 
     /**
      * Creates new form RPSPanel
      */
-    public RPSPanel() {
+    public RPSPanel(RPSModel model) {
         initComponents();
-        options.put(1, "ROCK");
-        options.put(2, "PAPER");
-        options.put(3, "SCISSORS");
-        outputLabel.setText("");
-        // Computer makes a choice
-        getComputerChoice();
+        updateFromModel(model);
+    }
+    public void updateFromModel(RPSModel model){
+        updateButtons(model);
+        updateLabels(model);
     }
 
-    /* Custom Game Methods here   */
-    private void getComputerChoice() {
-        userContinues.setEnabled(false);
-        rockButton.setEnabled(true);
-        paperButton.setEnabled(true);
-        scissorsButton.setEnabled(true);
-        //            Program randomly chooses (rock, paper, scissors)
-        // https://stackoverflow.com/a/363692 
-        Random rand = new Random();
-        int randomNumber = rand.nextInt(3) + 1;
-        String compChoice = options.get(randomNumber);
-        this.computerChoice = compChoice;
-        outputLabel.setText(""); // Blanks the OutputLabel 
+    private void updateButtons(RPSModel model){
+        rockButton.setEnabled(model.isRockEnabled());
+        paperButton.setEnabled(model.isPaperEnabled());
+        scissorsButton.setEnabled(model.isScissorsEnabled());
+        userContinues.setEnabled(model.isResetEnabled());
     }
-
-    private void seeWhoWon() {
-       
-        
-        // Add Computer Choice to FinalState Output
-        finalState = "";
-        finalState = "Computer Chose: "+computerChoice+" ";
-        // If Tie, let's figure it out now.
-        if (userChoice.equalsIgnoreCase(computerChoice)) {
-            finalState += "It's a Tie!";
-        } else if (userChoice.equalsIgnoreCase("ROCK")) {
-            if (computerChoice.equalsIgnoreCase("PAPER")) {
-                finalState += "Computer Wins!";
-            } else if (computerChoice.equalsIgnoreCase("SCISSORS")) {
-                finalState += "User Wins!";
-            }
-        } else if (userChoice.equalsIgnoreCase("PAPER")) {
-            if (computerChoice.equalsIgnoreCase("ROCK")) {
-               finalState += "User Wins!";
-            }
-            if (computerChoice.equalsIgnoreCase("SCISSORS")) {
-                finalState += "Computer Wins!";
-            }
-        } else if (userChoice.equalsIgnoreCase("SCISSORS")) {
-            if (computerChoice.equalsIgnoreCase("ROCK")) {
-                finalState += "Computer Wins";
-            } else if (computerChoice.equalsIgnoreCase("PAPER")) {
-                finalState += "User Wins!";
-            }
-        }
-        outputLabel.setText(finalState);
-        userContinues.setEnabled(true);
+    
+    private void updateLabels(RPSModel model){
+        outputLabel.setText(model.getOutputLabel());
     }
 
     /**
@@ -173,33 +131,26 @@ public class RPSPanel extends javax.swing.JPanel {
 
     private void userContinuesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userContinuesActionPerformed
         // TODO add your handling code here:
-        getComputerChoice();
+        Main.handleEventFromView("RESET");
     }//GEN-LAST:event_userContinuesActionPerformed
 
     private void rockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rockButtonActionPerformed
         // TODO add your handling code here:
-        userChoice = "ROCK";
-        seeWhoWon();
-        
-        paperButton.setEnabled(false);
-        scissorsButton.setEnabled(false);
+        Main.handleEventFromView("ROCK");
+       
     }//GEN-LAST:event_rockButtonActionPerformed
 
     private void paperButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paperButtonActionPerformed
         // TODO add your handling code here:
-        userChoice = "PAPER";
-        seeWhoWon();
-        rockButton.setEnabled(false);
-        scissorsButton.setEnabled(false);
+        Main.handleEventFromView("PAPER");
+        
+        
     }//GEN-LAST:event_paperButtonActionPerformed
 
     private void scissorsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scissorsButtonActionPerformed
         // TODO add your handling code here:
-        userChoice = "SCISSROS";
-        seeWhoWon();
-         rockButton.setEnabled(false);
-        paperButton.setEnabled(false);
-        
+        Main.handleEventFromView("SCISSORS");
+
     }//GEN-LAST:event_scissorsButtonActionPerformed
 
 
